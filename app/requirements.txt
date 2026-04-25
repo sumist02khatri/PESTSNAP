@@ -1,0 +1,6 @@
+streamlit
+ultralytics
+pillow
+torch
+requests
+groq

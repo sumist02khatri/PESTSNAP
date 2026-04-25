@@ -1,0 +1,12 @@
+0  rice leaf roller 			
+1  rice leaf caterpillar 		
+2  paddy stem maggot 			
+3  asiatic rice borer 			
+4  yellow rice borer 			
+5  rice gall midge 			
+6  Rice Stemfly 	     		
+7  brown plant hopper 				
+10 rice water weevil 			
+11 rice leafhopper 			
+12 grain spreader thrips 		
+13 rice shell pest 				
