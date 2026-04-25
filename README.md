@@ -11,40 +11,42 @@ Production-ready Streamlit application for rice pest image classification using 
   - `Fast mode` for rule-based offline responses
   - `Local Ollama mode` for offline LLM responses using `llama3`
   - `Free Cloud mode` using Groq's API
-- Modular project structure for UI, config, and utilities
+- Modular separation for UI components, utilities, and root config
 - Docker-ready deployment on port `8501`
 
 ## Folder Structure
 
 ```text
-app/
-├── app.py
-├── classes.txt
-├── Dockerfile
-├── README.md
-├── requirements.txt
-├── run.sh
-├── components/
-│   ├── chatbot.py
-│   ├── prediction.py
-│   ├── recommendation.py
-│   └── uploader.py
+PESTSNAP/
+├── app/
+│   ├── app.py
+│   ├── components/
+│   │   ├── chatbot.py
+│   │   ├── prediction.py
+│   │   ├── recommendation.py
+│   │   └── uploader.py
+│   └── utils/
+│       ├── llm_handler.py
+│       ├── model_loader.py
+│       └── pest_info.py
 ├── config/
 │   └── settings.py
 ├── modal/
 │   └── best.pt
-└── utils/
-    ├── llm_handler.py
-    ├── model_loader.py
-    └── pest_info.py
+├── classes.txt
+├── Dockerfile
+├── README.md
+├── requirements.txt
+└── run.sh
 ```
 
 ## Local Run
 
+From the project root:
+
 ```bash
-cd app
 pip install -r requirements.txt
-streamlit run app.py --server.port 8501
+streamlit run app/app.py --server.port 8501
 ```
 
 Open `http://localhost:8501`
@@ -84,10 +86,9 @@ Groq Python integration is based on the official Groq docs for chat completions:
 
 ## Docker
 
-Build from the `app` directory:
+Build from the project root:
 
 ```bash
-cd app
 docker build -t pestsnap-app .
 docker run --rm -p 8501:8501 pestsnap-app
 ```
