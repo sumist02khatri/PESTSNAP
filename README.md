@@ -1,6 +1,6 @@
 # Rice Pest Classification App
 
-Production-ready Streamlit application for rice pest image classification using a YOLOv8 classification model, with pest recommendations and three chatbot modes.
+Production-ready Streamlit application for rice pest image classification using a YOLOv8 classification model, with pest recommendations and chatbot modes for both local development and cloud hosting.
 
 ## Features
 
@@ -9,36 +9,89 @@ Production-ready Streamlit application for rice pest image classification using 
 - Recommendation system with problem, cure, and prevention guidance
 - Chat assistant modes:
   - `Fast mode` for rule-based offline responses
-  - `Local Ollama mode` for offline LLM responses using `llama3`
+  - `Local Ollama mode` using the smaller `llama3.2:1b` model by default
   - `Free Cloud mode` using Groq's API
+- Hosted mode support that hides `Local Ollama mode` for lighter deployments
 - Modular separation for UI components, utilities, and root config
-- Docker-ready deployment on port `8501`
+- Docker-ready deployment
 
 ## Folder Structure
 
 ```text
 PESTSNAP/
-├── app/
-│   ├── app.py
-│   ├── components/
-│   │   ├── chatbot.py
-│   │   ├── prediction.py
-│   │   ├── recommendation.py
-│   │   └── uploader.py
-│   └── utils/
-│       ├── llm_handler.py
-│       ├── model_loader.py
-│       └── pest_info.py
-├── config/
-│   └── settings.py
-├── modal/
-│   └── best.pt
-├── classes.txt
-├── Dockerfile
-├── README.md
-├── requirements.txt
-└── run.sh
+|-- app/
+|   |-- app.py
+|   |-- components/
+|   |   |-- chatbot.py
+|   |   |-- prediction.py
+|   |   |-- recommendation.py
+|   |   `-- uploader.py
+|   `-- utils/
+|       |-- llm_handler.py
+|       |-- model_loader.py
+|       `-- pest_info.py
+|-- config/
+|   `-- settings.py
+|-- modal/
+|   `-- best.pt
+|-- .dockerignore
+|-- .env.example
+|-- classes.txt
+|-- docker-compose.yml
+|-- Dockerfile
+|-- README.md
+|-- requirements.txt
+`-- run.sh
 ```
+
+## Deployment Modes
+
+### Local mode
+
+Use:
+- `Fast mode`
+- `Local Ollama mode`
+- `Free Cloud mode`
+
+Set:
+
+```env
+DEPLOYMENT_MODE=local
+```
+
+### Cloud mode
+
+Use:
+- `Fast mode`
+- `Free Cloud mode`
+
+`Local Ollama mode` is hidden automatically.
+
+Set:
+
+```env
+DEPLOYMENT_MODE=cloud
+```
+
+## Where To Change The Ollama Model
+
+The default local model is set in `config/settings.py`:
+
+```python
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2:1b")
+```
+
+You can change it in either of these ways:
+
+1. Temporary for one terminal session:
+
+```powershell
+$env:OLLAMA_MODEL="llama3.2:1b"
+```
+
+2. Permanent default in code:
+
+Update the fallback value in `config/settings.py`.
 
 ## Local Run
 
@@ -46,63 +99,113 @@ From the project root:
 
 ```bash
 pip install -r requirements.txt
-streamlit run app/app.py --server.port 8501
+streamlit run app/app.py --server.port 8502
 ```
 
-Open `http://localhost:8501`
+Open `http://localhost:8502`
+
+## Local Environment File
+
+Create `.env` in the project root:
+
+```env
+GROQ_API_KEY=your_groq_api_key_here
+GROQ_MODEL=llama-3.3-70b-versatile
+OLLAMA_MODEL=llama3.2:1b
+DEPLOYMENT_MODE=local
+```
+
+The app auto-loads `.env` on local startup.
 
 ## Ollama Setup
 
 Install Ollama locally, then run:
 
 ```bash
-ollama serve
-ollama pull llama3
+ollama pull llama3.2:1b
 ```
 
-Optional environment variables:
+The app defaults to:
 
-```bash
-set OLLAMA_BASE_URL=http://localhost:11434
-set OLLAMA_MODEL=llama3
+```text
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=llama3.2:1b
 ```
 
 If Ollama is unavailable, the app automatically falls back to curated rule-based guidance.
 
-## Free Cloud Setup with Groq
+## Groq Setup
 
-Create a Groq API key and export it before running the app:
+Add your Groq API key to `.env`:
 
-```bash
-set GROQ_API_KEY=your_api_key_here
-set GROQ_MODEL=llama-3.3-70b-versatile
+```env
+GROQ_API_KEY=your_groq_api_key_here
+GROQ_MODEL=llama-3.3-70b-versatile
 ```
 
 If the API key is missing or the request fails, the app falls back to curated pest guidance.
 
-Groq Python integration is based on the official Groq docs for chat completions:
-- https://console.groq.com/docs/text-chat
-- https://console.groq.com/docs/api-reference
+## Docker For Local Full Stack
 
-## Docker
+Use Docker Compose only if you want both:
+- app in Docker
+- Ollama in Docker
 
-Build from the project root:
+Start both containers:
+
+```bash
+docker compose up --build -d
+```
+
+Pull the Ollama model inside the running Ollama container:
+
+```bash
+docker exec -it pestsnap-ollama ollama pull llama3.2:1b
+```
+
+Then open:
+
+```text
+http://localhost:8501
+```
+
+## Docker For Hosting
+
+For free-tier hosting, deploy only the app container from `Dockerfile`.
+
+The Docker image now defaults to:
+
+```text
+DEPLOYMENT_MODE=cloud
+```
+
+so hosted deployments automatically hide `Local Ollama mode`.
+
+Build locally:
 
 ```bash
 docker build -t pestsnap-app .
-docker run --rm -p 8501:8501 pestsnap-app
 ```
 
-To use Ollama from Docker on Docker Desktop, point the app to the host:
+Run locally in a hosting-like way:
 
 ```bash
-docker run --rm -p 8501:8501 -e OLLAMA_BASE_URL=http://host.docker.internal:11434 pestsnap-app
+docker run --rm -p 8501:8501 --env-file .env -e DEPLOYMENT_MODE=cloud pestsnap-app
 ```
 
-To use Groq in Docker:
+Recommended hosting env vars:
 
-```bash
-docker run --rm -p 8501:8501 -e GROQ_API_KEY=your_api_key_here pestsnap-app
+```text
+GROQ_API_KEY=your_groq_api_key_here
+GROQ_MODEL=llama-3.3-70b-versatile
+DEPLOYMENT_MODE=cloud
+DEFAULT_CHAT_MODE=Fast mode
 ```
 
-The container listens on `8501`, so it does not clash with services already using `5432`.
+Do not depend on Ollama for free-tier hosting.
+
+## Notes
+
+- Local development can keep all three chatbot modes.
+- Free-tier hosting should use only `Fast mode` and `Free Cloud mode`.
+- The app container can be deployed to platforms like Render or Railway using the root `Dockerfile`.

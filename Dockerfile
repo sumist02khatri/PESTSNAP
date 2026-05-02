@@ -4,7 +4,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     STREAMLIT_SERVER_PORT=8501 \
-    STREAMLIT_SERVER_ADDRESS=0.0.0.0
+    STREAMLIT_SERVER_ADDRESS=0.0.0.0 \
+    OLLAMA_MODEL=llama3.2:1b \
+    DEPLOYMENT_MODE=cloud
 
 WORKDIR /app
 
@@ -20,4 +22,4 @@ COPY . .
 
 EXPOSE 8501
 
-CMD ["streamlit", "run", "app/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["sh", "run.sh"]
