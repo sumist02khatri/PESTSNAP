@@ -1,4 +1,6 @@
-# Rice Pest Classification App
+## COLLEGE MAJOR PROJECT 
+
+## PESTSNAP - Rice Pest Classification App
 
 Production-ready Streamlit application for rice pest image classification using a YOLOv8 classification model, with pest recommendations and chatbot modes for both local development and cloud hosting.
 
@@ -34,6 +36,8 @@ PESTSNAP/
 |   `-- settings.py
 |-- modal/
 |   `-- best.pt
+|-- assets/
+|   `-- screenshots/
 |-- .dockerignore
 |-- .env.example
 |-- classes.txt
@@ -43,6 +47,23 @@ PESTSNAP/
 |-- requirements.txt
 `-- run.sh
 ```
+
+## Screenshots
+
+Add your application screenshots to `assets/screenshots/`, then GitHub will render them here automatically.
+
+### Landing Page
+![Landing Page](assets/screenshots/landing-page.png)
+
+### uploader Section
+![Landing Page](assets/screenshots/uploader-section.png)
+
+### Prediction Output
+![Prediction Output](assets/screenshots/prediction-output.png)
+![Prediction Output](assets/screenshots/prediction-output2.png)
+
+### Assistant Response
+![Assistant Response](assets/screenshots/assistant-response.png)
 
 ## Deployment Modes
 

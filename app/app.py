@@ -406,20 +406,76 @@ def inject_styles():
 
         .stTextInput > div > div > input {
             border-radius: 18px;
-            border: 1px solid rgba(41, 84, 61, 0.18);
+            border: 1px solid rgba(21, 51, 37, 0.22) !important;
             background: rgba(255,255,255,0.90);
             padding: 0.78rem 0.9rem;
             color: #153325 !important;
+            caret-color: #153325 !important;
+            -webkit-text-fill-color: #153325 !important;
+            box-shadow: none !important;
+            outline: none !important;
             transition: border-color 180ms ease, box-shadow 180ms ease;
         }
 
         .stTextInput > div > div > input:focus {
-            border-color: rgba(41, 84, 61, 0.34);
-            box-shadow: 0 0 0 4px rgba(42, 103, 70, 0.10);
+            border: 1px solid rgba(21, 51, 37, 0.38) !important;
+            box-shadow: 0 0 0 4px rgba(42, 103, 70, 0.10) !important;
+            outline: none !important;
         }
 
         .stTextInput > div > div > input::placeholder {
             color: #809086 !important;
+            opacity: 1 !important;
+        }
+
+        .stTextInput [data-baseweb="base-input"] {
+            border: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        .stTextInput [data-baseweb="base-input"] > div {
+            border: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        .stTextInput [data-baseweb="base-input"] > div:focus-within {
+            border: none !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        .stTextInput div[data-baseweb="base-input"] {
+            border: none !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        .stTextInput div[data-baseweb="base-input"]:focus-within {
+            border: none !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        .stTextInput div[data-baseweb="base-input"] * {
+            box-shadow: none !important;
+        }
+
+        .stTextInput > div {
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .stTextInput > div:focus-within {
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .stTextInput div[data-testid="InputInstructions"] {
+            color: #9fb1a7 !important;
             opacity: 1 !important;
         }
 
